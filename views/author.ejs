@@ -1,0 +1,10 @@
+<%for(var author in authors){%>
+    <img src="<%= authors[author].urlphoto %>" alt="Autor" WIDTH="20%" HEIGHT="85%" />
+    <h3><%= authors[author].name %></h3>
+    <%if(authors[author].urlvideo) {%>
+        <video controls>
+            <source src="<%= authors[author].urlvideo %>">
+            Your browser does not support the video tag.
+        </video>
+    <%}%>
+<%}%>
