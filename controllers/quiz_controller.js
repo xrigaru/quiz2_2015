@@ -32,7 +32,7 @@ exports.index = function(req, res){
         var search = req.query.search;
         search = search.split(" ").join('%');
         search = '%' + search + '%';
-
+		// en vez de utilizar LIKE se usa ordenacion directa en el query
         query = { where: ["pregunta like ?", search] };
     }
 
