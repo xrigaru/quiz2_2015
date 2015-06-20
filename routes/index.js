@@ -7,6 +7,10 @@ var quizController = require('../controllers/quiz_controller');
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Quiz' });
 });
+
+// autoload de comandos con :quizId
+router.param('quizId', quizController.load);		// autoload quiz
+
 /* GET author. */
 router.get('/author', function(req, res, next) {
   res.render('author', {authors: [{ name: 'Ricardo Garcia', urlphoto: '/images/rgr.jpg', urlvideo: '' }]});
