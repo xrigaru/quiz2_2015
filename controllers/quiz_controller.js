@@ -14,15 +14,15 @@ exports.load = function(req, res, next, quizId) {
 
 
 // GET /quizes
-/*exports.index = function(req, res){
+exports.index = function(req, res){
 	models.Quiz.findAll().then(
 		function(quizes) {
-			res.render('quizes/index', {quizes: quizes});
+			res.render('quizes/index', {quizes: quizes, errors: []});
 		}
 	).catch(function(error) { next(error);})
-};*/
+};
 
-exports.index = function(req, res){
+/*exports.index = function(req, res){
     // se define un objeto vacio en caso de que el usuario no haga
     // una busqueda y se quieran mostrar todos los resultados
     var query = {};
@@ -41,29 +41,38 @@ exports.index = function(req, res){
 			res.render('quizes/index', {quizes: quizes});
 		}
 	).catch(function(error){ next(error);});
-};
+};*/
 
 // GET  /quizes/new
 exports.new = function(req, res) {
 	var quiz = models.Quiz.build(	//crea objeto quiz
 		{pregunta: "Pregunta", respuesta: "Respuesta"}
 	);
-	res.render('quizes/new', {quiz: quiz});
+	res.render('quizes/new', {quiz: quiz, errors: []});
 };
 
 // POST  /quizes/create
 exports.create = function(req, res) {
-	var quiz = models.Quiz.build( req.body.quiz);
+	var quiz = models.Quiz.build( req.body.quiz );
 	
-	// guarda en DB los campos pregunta y respuesta de quiz
-	quiz.save({fields: ["pregunta", "respuesta"]}).then(function(){
-		res.redirect('/quizes');
-	})	// redireccion HTTP (URL relaivo) lista de preguntas
+	quiz
+	.validate()
+	.then(
+		function(err){
+			if (err) {
+				res.render('quizes/new', {quiz: quiz, errors: err.errors});
+			} else {
+				// guarda en DB los campos pregunta y respuesta de quiz
+				quiz.save({fields: ["pregunta", "respuesta"]})
+				.then(function(){ res.redirect('/quizes')})
+			}	// redireccion HTTP (URL relativo) lista de preguntas
+		}
+	);
 };
 
 // GET /quizes/:id
 exports.show = function(req, res){
-	res.render('quizes/show', {quiz: req.quiz});
+	res.render('quizes/show', {quiz: req.quiz, errors: []});
 };
 
 // GET /quizes/:id/answer
@@ -72,5 +81,8 @@ exports.answer = function(req, res){
 	if (req.query.respuesta === req.quiz.respuesta){
 		resultado = 'Correcto';
 	}
-	res.render('quizes/answer', {quiz: req.quiz, respuesta: resultado});
+	res.render('quizes/answer', 
+		{quiz: req.quiz, 
+		respuesta: resultado, 
+		errors: []});
 };
