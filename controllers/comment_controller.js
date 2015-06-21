@@ -9,7 +9,7 @@ exports.new = function(req, res) {
 exports.create = function(req, res) {
 	var comment = models.Comment.build(
 		{ texto: req.body.comment.texto,
-		  QuizId: req.params.QuizId
+		  QuizId: req.params.quizId
 		});
 	
 	comment
@@ -23,7 +23,7 @@ exports.create = function(req, res) {
 				// guarda en DB los campo texto del comment
 				comment
 				.save()
-				.then(function(){ res.redirect('/quizes'+req.params.quizId)})
+				.then(function(){ res.redirect('/quizes/'+req.params.quizId)})
 			}	// redireccion HTTP (URL relativo) lista de preguntas
 		}
 	).catch(function(error){next(error)});
