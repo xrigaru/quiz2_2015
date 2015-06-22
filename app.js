@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 
 var partials = require('express-partials');
 var methodOverride = require('method-override');
+var session = require('express-session');
 
 var routes = require('./routes/index');
 //var users = require('./routes/users');
@@ -23,7 +24,8 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 //app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.urlencoded());
-app.use(cookieParser());
+app.use(cookieParser('Quiz 2015'));  //seria mejor si fuera aleatorio
+app.use(session());
 app.use(partials());
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
