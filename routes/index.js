@@ -3,6 +3,7 @@ var router = express.Router();
 
 var quizController = require('../controllers/quiz_controller');
 var commentController = require('../controllers/comment_controller');
+var sessionController = require('../controllers/session_controller');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -16,6 +17,11 @@ router.param('quizId', quizController.load);		// autoload quiz
 router.get('/author', function(req, res, next) {
   res.render('author', {authors: [{ name: 'Ricardo Garcia', urlphoto: '/images/rgr.jpg' }], errors: [] });
 });
+
+// Definición de rutas sesion
+router.get('/login', 						sessionController.new);  // formulario login
+router.post('/login', 						sessionController.create);  // crear sesion
+router.delete('/login', 					sessionController.destroy);  // destruir sesion
 
 // Definición de rutas de /quizes
 router.get('/quizes', 						quizController.index);
