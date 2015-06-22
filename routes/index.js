@@ -21,7 +21,7 @@ router.get('/author', function(req, res, next) {
 // Definición de rutas sesion
 router.get('/login', 						sessionController.new);  // formulario login
 router.post('/login', 						sessionController.create);  // crear sesion
-router.get('/login', 						sessionController.destroy);  // destruir sesion
+router.delete('/logout', 						sessionController.destroy);  // destruir sesion
 
 // Definición de rutas de /quizes
 router.get('/quizes', 						quizController.index);
