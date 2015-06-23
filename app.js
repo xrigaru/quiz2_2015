@@ -79,16 +79,18 @@ app.use(function(err, req, res, next) {
     });
 });
 
-app.use(function(req, res, next) {
-	if (req.session.user) {
-		if (Date.now() - req.session.user.lastRequestTime > 1*60*1000) {
-			delete req.session.user;
+app.use(function(req, res, next){
+	var tiempoMaxInactivo = 30000;
+	if (req.session.user) { //Si se ha iniciado sesion comprobamos que no ha expirado
+		if (req.session.horaExpira > (new Date()).getTime()) { // Si no ha expirado Actualizamos hora de expiracion
+			req.session.horaExpira = (new Date()).getTime() + tiempoMaxInactivo; 
+			next();
 		} else {
-			req.session.user.lastRequestTime = Date.now();
+			req.session.destroy(); // Si la sesion ha expirado la cerramos
 		}
+	} else {
+		next(); // Si no había sesión iniciada no hacemos nada
 	}
-	next();
 });
-
 
 module.exports = app;
