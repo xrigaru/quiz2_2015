@@ -32,7 +32,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //tiempo de sesion
  app.use(function(req, res, next) {
-     if(req.session.user){									// si estamos en una sesion
+
+	if(req.session.user){									// si estamos en una sesion
         if(!req.session.marcatiempo){						//primera vez se pone la marca de tiempo
              req.session.marcatiempo=(new Date()).getTime();
         }else{
@@ -107,6 +108,6 @@ app.use(function(err, req, res, next) {
 	} else {
 		next(); // Si no había sesión iniciada no hacemos nada
 	}
-});
+});*/
 
 module.exports = app;
