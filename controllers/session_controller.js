@@ -35,8 +35,6 @@ exports.create = function(req, res) {
         //req.session.user = {id:user.id, username:user.username, lastRequestTime: Date.now()};
 		req.session.user = {id:user.id, username:user.username};
 		
-		req.session.horaExpira = (new Date()).getTime() + 30000;  //expiracon de la sesion
-
         res.redirect(req.session.redir.toString());// redirección a path anterior a login
     });
 };

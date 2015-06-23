@@ -30,6 +30,22 @@ app.use(partials());
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 
+//tiempo de sesion
+ app.use(function(req, res, next) {
+     if(req.session.user){									// si estamos en una sesion
+        if(!req.session.marcatiempo){						//primera vez se pone la marca de tiempo
+             req.session.marcatiempo=(new Date()).getTime();
+        }else{
+            if((new Date()).getTime()-req.session.marcatiempo > 120000){	//se pasó el tiempo y eliminamos la sesión (2min=1200000ms)
+				delete req.session.user;     	//eliminamos el usuario
+            }else{								//hay actividad se pone nueva marca de tiempo
+                req.session.marcatiempo=(new Date()).getTime();
+            }
+        }
+    }
+    next();
+});
+
 // Helpers dinamicos
 app.use(function(req, res, next) {
 
@@ -79,7 +95,7 @@ app.use(function(err, req, res, next) {
     });
 });
 
-app.use(function(req, res, next){
+/*app.use(function(req, res, next){
 	var tiempoMaxInactivo = 30000;
 	if (req.session.user) { //Si se ha iniciado sesion comprobamos que no ha expirado
 		if (req.session.horaExpira > (new Date()).getTime()) { // Si no ha expirado Actualizamos hora de expiracion
