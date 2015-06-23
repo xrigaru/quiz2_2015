@@ -30,17 +30,26 @@ app.use(partials());
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-//tiempo de sesion
+//tiempo de sesion: solucion basada en Juan Ignacio Gil Palacios
  app.use(function(req, res, next) {
-
-	if(req.session.user){									// si estamos en una sesion
-        if(!req.session.marcatiempo){						//primera vez se pone la marca de tiempo
-             req.session.marcatiempo=(new Date()).getTime();
+	// si el usuario se ha logeado, entonces comienza a funcionar
+	if(req.session.user){					
+		// Si no existe la variables local 'tiempoExpiracion' la inicializa
+		// si, ya existe comprueba si se ha sobrepasado el tiempo asignado sin actividada
+        if(!req.session.tiempoExpiracion){		
+			// iniicialilza la variable 'tiempoExpiracion' con el valor del tiempo de acceso actual
+            req.session.tiempoExpiracion=(new Date()).getTime();
         }else{
-            if((new Date()).getTime()-req.session.marcatiempo > 120000){	//se pasó el tiempo y eliminamos la sesión (2min=1200000ms)
-				delete req.session.user;     	//eliminamos el usuario
-            }else{								//hay actividad se pone nueva marca de tiempo
-                req.session.marcatiempo=(new Date()).getTime();
+			// Si ya esta la marca de tiempo con la variable 'tiempoExpiracion'
+			// comprueba si se ha sobrepasado el tiempo de 2mm (120000 milisegundos)
+            if((new Date()).getTime()-req.session.tiempoExpiracion > 120000){	
+				// si se ha sobrepasado el tiempo de sesion sin utilización
+				// se elimina la sesion del usuario
+				delete req.session.user;     	
+            }else{		
+				// si hay activiadad, se vuelve a actualizar la variable 'tiempoExpiracion'
+				// es decir, se resetea el contador para volver a comenzar el conteo de utilización
+                req.session.tiempoExpiracion=(new Date()).getTime();
             }
         }
     }
@@ -95,19 +104,5 @@ app.use(function(err, req, res, next) {
 		errors: []
     });
 });
-
-/*app.use(function(req, res, next){
-	var tiempoMaxInactivo = 30000;
-	if (req.session.user) { //Si se ha iniciado sesion comprobamos que no ha expirado
-		if (req.session.horaExpira > (new Date()).getTime()) { // Si no ha expirado Actualizamos hora de expiracion
-			req.session.horaExpira = (new Date()).getTime() + tiempoMaxInactivo; 
-			next();
-		} else {
-			req.session.destroy(); // Si la sesion ha expirado la cerramos
-		}
-	} else {
-		next(); // Si no había sesión iniciada no hacemos nada
-	}
-});*/
 
 module.exports = app;
