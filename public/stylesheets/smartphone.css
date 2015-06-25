@@ -7,4 +7,8 @@ h2 span, section h3, label.rem
 body             { font-size: xx-large; }
 input, button    { font-size: x-large; }
 footer           { font-size: large; }
+#lista_estadisticas {
+   list-style-type: none;
+   display: inline;
+}
 .quiz_img { float: none; }

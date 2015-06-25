@@ -12,7 +12,10 @@ nav span             { margin: 0px 10px 0px 0px;
   					   width: 100%;
   					   display: inline-block;}
 					   
-
+#lista_estadisticas {
+   list-style-type: none;
+   display: inline;
+}
 
 #ErrorMsgs           { color: #f61; font-size: smaler}
 .right 				 {float: right;}
