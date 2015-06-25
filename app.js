@@ -33,13 +33,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 //tiempo de sesion: solucion basada en Juan Ignacio Gil Palacios
  app.use(function(req, res, next) {
 	// si el usuario se ha logeado, entonces comienza a funcionar
-	if(req.session.user){					
+	if(req.session.user){		
 		// Si no existe la variables local 'tiempoExpiracion' la inicializa
-		// si, ya existe comprueba si se ha sobrepasado el tiempo asignado sin actividada
-        if(!req.session.tiempoExpiracion){		
-			// iniicialilza la variable 'tiempoExpiracion' con el valor del tiempo de acceso actual
-            req.session.tiempoExpiracion=(new Date()).getTime();
-        }else{
+		// si, ya existe comprueba si se ha sobrepasado el tiempo asignado sin actividad	
+        if(req.session.tiempoExpiracion){	
 			// Si ya esta la marca de tiempo con la variable 'tiempoExpiracion'
 			// comprueba si se ha sobrepasado el tiempo de 2mm (120000 milisegundos)
             if((new Date()).getTime()-req.session.tiempoExpiracion > 120000){	
@@ -51,6 +48,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 				// es decir, se resetea el contador para volver a comenzar el conteo de utilización
                 req.session.tiempoExpiracion=(new Date()).getTime();
             }
+        }else{
+			// iniicialilza la variable 'tiempoExpiracion' con el valor del tiempo de acceso actual
+            req.session.tiempoExpiracion=(new Date()).getTime();
         }
     }
     next();
