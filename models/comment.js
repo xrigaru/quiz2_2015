@@ -15,8 +15,8 @@ module.exports = function(sequelize, DataTypes){
 		{ classMethods: {
 				countUnpublished: function () {
 					//Comentario no publicados
-					//return this.count({where: {publicado: 'false'}}).then('success', function(count) {
-					return this.aggregate('QuizId', 'count', { distinct: false }).then('success', function(count) {
+					return this.count({where: {publicado: 'false'}}).then('success', function(count) {
+					//return this.aggregate('QuizId', 'count', { distinct: false }).then('success', function(count) {
 						return count;
 					})
 				},
